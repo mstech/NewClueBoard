@@ -11,6 +11,9 @@ import java.util.Set;
 import java.util.TreeMap;
 
 public class Board {
+	public static final String LEGEND_FILENAME = "legend.txt";
+	public static final String LAYOUT_FILENAME = "Clue Layout.csv";
+	
 	private ArrayList<BoardCell> cells;
 	private Map<Character, String> rooms;
 	private int numRows;
@@ -25,28 +28,28 @@ public class Board {
 		super();
 		cells = new ArrayList<BoardCell>();
 		rooms = new TreeMap<Character, String>();
-		loadConfigFiles("legend.txt", "Clue Layout.csv");
+		loadConfigFiles();
 		adjMtx = new TreeMap<Integer, LinkedList<Integer>>();
 		calcAdjacencies();
 		targets = new HashSet<BoardCell>();
 		gridPieces = numRows * numColumns;
 		currentPath = new LinkedList<Integer>();
-		visited = new boolean[gridPieces];
+		visited = new boolean[gridPieces]; 
 		for (int i=0; i<gridPieces; i++)
 			visited[i] = false;
 	}
 
-	public void loadConfigFiles(String legend, String layout){
+	private void loadConfigFiles(){
 		try {
-		loadLegend(legend);
-		loadLayout(layout);
+			loadLegend(LEGEND_FILENAME);
+			loadLayout(LAYOUT_FILENAME);
 		} catch (BadConfigFormatException e){
 			System.out.println(e.toString());
 		}
 		System.out.println("Files are successfully loaded.");
 	}
 	
-	public void loadLegend(String legend) throws BadConfigFormatException{
+	private void loadLegend(String legend) throws BadConfigFormatException{
 		try {
 			FileReader inLegend = new FileReader(legend);
 			Scanner readLegend = new Scanner(inLegend);
@@ -69,7 +72,7 @@ public class Board {
 		}
 	}
 	
-	public void loadLayout(String layout) throws BadConfigFormatException{
+	private void loadLayout(String layout) throws BadConfigFormatException{
 		try {
 			FileReader inLayout = new FileReader(layout);
 			Scanner readLayout = new Scanner(inLayout);
@@ -138,7 +141,7 @@ public class Board {
 		return targets;
 	}
 	
-	public void generateNewTargets(int startPos, int steps){
+	private void generateNewTargets(int startPos, int steps){
 		visited[startPos] = true;
 		LinkedList<Integer> currentList = (LinkedList<Integer>) this.getAdjList(startPos).clone();
 		int nextPos;
@@ -165,7 +168,7 @@ public class Board {
 		generateNewTargets(startPos, steps);
 	}
 	
-	public void calcAdjacencies(){
+	private void calcAdjacencies(){
 		int index;
 		for (int i=0; i<numRows; i++){
 			for (int j=0; j<numColumns; j++){
@@ -213,7 +216,11 @@ public class Board {
 		}
 	}
 	
-	public boolean adjToWalkway(int index, int walkwayIndex){
+	/*
+	 * True if `index` is a room and a door pointing in the direction to `walkawayindex`
+	 * 
+	 */
+	private boolean adjToWalkway(int index, int walkwayIndex){
 		//	room cell but not doorway => not reachable
 		if (getCellAt(index).isRoom() && !getCellAt(index).isDoorway())
 			return false;
@@ -240,10 +247,5 @@ public class Board {
 			}
 		}
 		return true;
-	}
-	
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
 	}
 }

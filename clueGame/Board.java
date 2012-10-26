@@ -157,11 +157,13 @@ public class Board {
 					targets.add(getCellAt(currentPath.getLast()));
 					System.out.println(currentPath.toString());
 				}
-				else 
+				else {
 					generateNewTargets(nextPos, steps);
+					visited.pop();
+				}
 				currentPath.removeLast();
 				//visited[nextPos] = false;
-				visited.pop();
+				
 			}
 		}
 	}

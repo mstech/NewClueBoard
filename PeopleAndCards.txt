@@ -1,0 +1,30 @@
+player computer Miss Scarlett
+player computer Colonel Mustard
+player computer Mrs. White
+player computer Reverend Green
+player computer Mrs. Peacock
+player human Professor Plum
+
+card suspect Miss Scarlett
+card suspect Colonel Mustard
+card suspect Mrs. White
+card suspect Reverend Green
+card suspect Mrs. Peacock
+card suspect Professor Plum
+
+card weapon Candlestick
+card weapon Dagger
+card weapon Lead Pipe
+card weapon Revolver
+card weapon Rope
+card weapon Spanner
+
+card room Conservatory
+card room Kitchen
+card room Ballroom
+card room Billiard Room
+card room Library
+card room Study
+card room Dining Room
+card room Lounge
+card room Hall

@@ -21,7 +21,6 @@ public class Board {
 	private int gridPieces;
 	private Map<Integer, LinkedList<Integer>> adjMtx;
 	private Set<BoardCell> targets;
-	//private boolean[] visited;
 	private LinkedList<Integer> currentPath;
 	
 	private LinkedList<Integer> visited;
@@ -142,13 +141,11 @@ public class Board {
 	}
 	
 	private void generateNewTargets(int startPos, int steps){
-		//visited[startPos] = true;
 		visited.push(startPos);
 		LinkedList<Integer> currentList = (LinkedList<Integer>) this.getAdjList(startPos).clone();
 		int nextPos;
 		while(!currentList.isEmpty()){
 			nextPos = currentList.pop();
-			//if(!visited[nextPos]) { 
 			if (!visited.contains(nextPos)) {
 				currentPath.add(nextPos);
 				if (getCellAt(nextPos).isDoorway())
@@ -157,11 +154,11 @@ public class Board {
 					targets.add(getCellAt(currentPath.getLast()));
 					System.out.println(currentPath.toString());
 				}
-				else 
+				else {
 					generateNewTargets(nextPos, steps);
+					visited.pop();
+				}
 				currentPath.removeLast();
-				//visited[nextPos] = false;
-				visited.pop();
 			}
 		}
 	}

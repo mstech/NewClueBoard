@@ -24,7 +24,7 @@ public class Board {
 	private LinkedList<Integer> currentPath;
 	
 	private Map<String, Player> players;
-	private Map<String, Card> people;
+	private Map<String, Card> suspect;
 	private Map<String, Card> room;
 	private Map<String, Card> weapon;
 	private Card[] goal;
@@ -41,7 +41,7 @@ public class Board {
 		currentPath = new LinkedList<Integer>();
 		visited = new LinkedList<Integer>();
 		players = new HashMap<String, Player>();
-		people = new HashMap<String, Card>();
+		suspect = new HashMap<String, Card>();
 		room = new HashMap<String, Card>();
 		weapon = new HashMap<String, Card>();
 
@@ -151,7 +151,7 @@ public class Board {
 						name = name.substring(0, name.length() -1);
 						
 						if ("suspect".equalsIgnoreCase(elements[1])) {
-							people.put(name, new Card(name, Card.CardType.SUSPECT));
+							suspect.put(name, new Card(name, Card.CardType.SUSPECT));
 						} else if ("weapon".equalsIgnoreCase(elements[1])) {
 							weapon.put(name, new Card(name, Card.CardType.WEAPON));
 						} else if ("room".equalsIgnoreCase(elements[1])) {
@@ -335,8 +335,8 @@ public class Board {
 	}
 	
 	public Map<String, Card> getCards(String cardType) {
-		if(cardType.equals("people")) {
-			return people;
+		if(cardType.equals("suspect")) {
+			return suspect;
 		}
 		else if(cardType.equals("room")) {
 			return room;

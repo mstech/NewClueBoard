@@ -1,9 +1,9 @@
-player computer Miss Scarlett
-player computer Colonel Mustard
-player computer Mrs. White
-player computer Reverend Green
-player computer Mrs. Peacock
-player human Professor Plum
+player computer 5 0 Miss Scarlett
+player computer 0 6 Colonel Mustard
+player computer 0 12 Mrs. White
+player computer 12 19 Reverend Green
+player computer 19 6 Mrs. Peacock
+player human 16 19 Professor Plum
 
 card suspect Miss Scarlett
 card suspect Colonel Mustard

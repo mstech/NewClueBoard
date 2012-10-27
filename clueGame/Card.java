@@ -3,13 +3,19 @@ package clueGame;
 public class Card {
 	
 	public enum CardType {
-		PERSON,
+		SUSPECT,
 		WEAPON,
 		ROOM;
 	}
 	
 	private String name;
 	private CardType cardType;
+	
+	public Card(String name, CardType ct) {
+		this.name = name;
+		this.cardType = ct;
+	}
+	
 	
 	@Override
 	public boolean equals(Object toCompare) {

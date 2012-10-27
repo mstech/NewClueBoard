@@ -21,4 +21,16 @@ public class Player {
 		return startY;
 	}
 	
+	public Card[] getCards() {
+		return cards;
+	}
+	
+	public Card disproveSuggestion(Card suspect, Card weapon, Card room) {
+		return null;
+	}
+	
+	public void addCard(Card c) {
+		
+	}
+	
 }

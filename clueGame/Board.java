@@ -139,19 +139,20 @@ public class Board {
 						if ("computer".equalsIgnoreCase(elements[1])) {
 							players.put(name, new ComputerPlayer(name, startX, startY));
 						} else if ("human".equalsIgnoreCase(elements[1])) {
-							players.put(name, new HumanPlayer(name, startX, startY));	
-							System.out.println("Name: [" + name + "]");
+							players.put(name, new HumanPlayer(name, startX, startY));
 						}
 					} else if ("card".equalsIgnoreCase(elements[0])) {
 						i = 2;
 						while (i < elements.length) {
-							name += elements[i++];
+							name += elements[i++] + " ";
 						}
+						name = name.substring(0, name.length() -1);
 						
 						if ("suspect".equalsIgnoreCase(elements[1])) {
 							cards.put(name, new Card(name, Card.CardType.SUSPECT));
 						} else if ("weapon".equalsIgnoreCase(elements[1])) {
 							cards.put(name, new Card(name, Card.CardType.WEAPON));
+							System.out.println("Name: [" + name + "]");
 						} else if ("room".equalsIgnoreCase(elements[1])) {
 							cards.put(name, new Card(name, Card.CardType.ROOM));
 						}

@@ -3,6 +3,7 @@ package clueGame;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
@@ -13,35 +14,44 @@ import java.util.TreeMap;
 public class Board {
 	public static final String LEGEND_FILENAME = "legend.txt";
 	public static final String LAYOUT_FILENAME = "Clue Layout.csv";
+	public static final String CARDANDPLAYERS_FILENAME = "PeopleAndCards.txt";
 	
 	private ArrayList<BoardCell> cells;
 	private Map<Character, String> rooms;
-	private int numRows;
-	private int numColumns;
-	private int gridPieces;
+	private LinkedList<Integer> visited;
 	private Map<Integer, LinkedList<Integer>> adjMtx;
 	private Set<BoardCell> targets;
 	private LinkedList<Integer> currentPath;
 	
-	private LinkedList<Integer> visited;
+	private Map<String, Player> players;
+	private Map<String, Card> cards;
+	
+	private int numRows;
+	private int numColumns;
+	private int gridPieces;
 	
 	public Board() {
 		super();
 		cells = new ArrayList<BoardCell>();
 		rooms = new TreeMap<Character, String>();
-		loadConfigFiles();
 		adjMtx = new TreeMap<Integer, LinkedList<Integer>>();
-		calcAdjacencies();
 		targets = new HashSet<BoardCell>();
-		gridPieces = numRows * numColumns;
 		currentPath = new LinkedList<Integer>();
 		visited = new LinkedList<Integer>();
+		players = new HashMap<String, Player>();
+		cards = new HashMap<String, Card>();
+		
+		gridPieces = numRows * numColumns;		
+
+		loadConfigFiles();
+		calcAdjacencies();
 	}
 
 	private void loadConfigFiles(){
 		try {
 			loadLegend(LEGEND_FILENAME);
 			loadLayout(LAYOUT_FILENAME);
+			loadCardsAndPeople(CARDANDPLAYERS_FILENAME);
 		} catch (BadConfigFormatException e){
 			System.out.println(e.toString());
 		}
@@ -104,41 +114,56 @@ public class Board {
 		}
 	}
 	
-	public RoomCell getRoomCellAt(int row, int col){
-		int index = calcIndex(row, col);
-		if (cells.get(index).isRoom())
-			return (RoomCell) cells.get(index);
-		else
-			return null;
+	public void loadCardsAndPeople(String filename) throws BadConfigFormatException {
+		try {
+			FileReader inFile = new FileReader(filename);
+			Scanner readFile = new Scanner(inFile);
+			
+			String[] elements;
+			String current;
+			while (readFile.hasNext()) {
+				current = readFile.nextLine();
+				if (!"".equals(current)) {
+					elements = current.split(" ");
+					String name = "";
+					int i;
+					if ("player".equalsIgnoreCase(elements[0])) {
+						i = 4;
+						while (i < elements.length) {
+							name += elements[i++] + " ";
+						}
+						name = name.substring(0, name.length() -1);
+						
+						int startX = Integer.parseInt(elements[2]);
+						int startY = Integer.parseInt(elements[3]);
+						if ("computer".equalsIgnoreCase(elements[1])) {
+							players.put(name, new ComputerPlayer(name, startX, startY));
+						} else if ("human".equalsIgnoreCase(elements[1])) {
+							players.put(name, new HumanPlayer(name, startX, startY));	
+							System.out.println("Name: [" + name + "]");
+						}
+					} else if ("card".equalsIgnoreCase(elements[0])) {
+						i = 2;
+						while (i < elements.length) {
+							name += elements[i++];
+						}
+						
+						if ("suspect".equalsIgnoreCase(elements[1])) {
+							cards.put(name, new Card(name, Card.CardType.SUSPECT));
+						} else if ("weapon".equalsIgnoreCase(elements[1])) {
+							cards.put(name, new Card(name, Card.CardType.WEAPON));
+						} else if ("room".equalsIgnoreCase(elements[1])) {
+							cards.put(name, new Card(name, Card.CardType.ROOM));
+						}
+					}
+				}
+			}
+		} catch (FileNotFoundException e) {
+			System.out.println("Can't find cards and people config file: " + filename);
+		}
 	}
 	
-	public BoardCell getCellAt(int idx) {
-		return cells.get(idx);
-	}
-
-	public Map<Character, String> getRooms() {
-		return rooms;
-	}
-
-	public int calcIndex(int row, int col){
-		return row*numColumns + col;
-	}
-
-	public int getNumRows() {
-		return numRows;
-	}
-
-	public int getNumColumns() {
-		return numColumns;
-	}
 	
-	public LinkedList<Integer> getAdjList(int index){
-		return adjMtx.get(index);
-	}
-	
-	public Set<BoardCell> getTargets(){
-		return targets;
-	}
 	
 	private void generateNewTargets(int startPos, int steps){
 		visited.push(startPos);
@@ -152,7 +177,7 @@ public class Board {
 					targets.add(getCellAt(currentPath.getLast()));
 				else if (currentPath.size() == steps){
 					targets.add(getCellAt(currentPath.getLast()));
-					System.out.println(currentPath.toString());
+					//System.out.println(currentPath.toString());
 				}
 				else {
 					generateNewTargets(nextPos, steps);
@@ -248,5 +273,57 @@ public class Board {
 			}
 		}
 		return true;
+	}
+	
+	public RoomCell getRoomCellAt(int row, int col){
+		int index = calcIndex(row, col);
+		if (cells.get(index).isRoom())
+			return (RoomCell) cells.get(index);
+		else
+			return null;
+	}
+	
+	public BoardCell getCellAt(int idx) {
+		return cells.get(idx);
+	}
+
+	public Map<Character, String> getRooms() {
+		return rooms;
+	}
+
+	public int calcIndex(int row, int col){
+		return row*numColumns + col;
+	}
+
+	public int getNumRows() {
+		return numRows;
+	}
+
+	public int getNumColumns() {
+		return numColumns;
+	}
+	
+	public LinkedList<Integer> getAdjList(int index){
+		return adjMtx.get(index);
+	}
+	
+	public Set<BoardCell> getTargets(){
+		return targets;
+	}
+	
+	public Map<String, Player> getPlayers() {
+		return players;
+	}
+	
+	public Map<String, Card> getCards() {
+		return cards;
+	}
+	
+	public Player getPlayer(String name) {
+		return players.get(name);
+	}
+	
+	public Card getCard(String name) {
+		return cards.get(name);
 	}
 }

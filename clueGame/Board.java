@@ -289,7 +289,7 @@ public class Board {
 		
 	}
 	
-	public void Deal() {
+	public void deal() {
 		
 	}
 	

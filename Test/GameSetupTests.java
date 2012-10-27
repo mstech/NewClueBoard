@@ -46,35 +46,22 @@ public class GameSetupTests {
 	
 	@Test
 	public void testLoadingcards() {
-		Map<String, Card> cards = board.getCards();
-		Assert.assertEquals(21, cards.size());
+		Map<String, Card> suspect = board.getCards("suspect");
+		Map<String, Card> weapons = board.getCards("weapon");
+		Map<String, Card> rooms = board.getCards("room");
 		
-		int suspect = 0;
-		int weapon = 0;
-		int rooms = 0;
-		for (Card c : cards.values()) {
-			switch (c.getCardType()) {
-			case SUSPECT:
-				suspect++;
-				break;
-			case WEAPON:
-				weapon++;
-				break;
-			case ROOM:
-				rooms++;
-				break;
-			}
-		}
+		int totalSize = suspect.size() + weapons.size() + rooms.size();
+		Assert.assertEquals(21, totalSize);
+
+		Assert.assertEquals(6, suspect.size());
+		Assert.assertEquals(6, weapons.size());
+		Assert.assertEquals(9, rooms.size());
 		
-		Assert.assertEquals(6, suspect);
-		Assert.assertEquals(6, weapon);
-		Assert.assertEquals(9, rooms);
-		
-		Card c = board.getCard("Miss Scarlett");
+		Card c = board.getCard("Miss Scarlett", "suspect");
 		Assert.assertNotNull(c);
-		c = board.getCard("Candlestick");
+		c = board.getCard("Candlestick", "weapon");
 		Assert.assertNotNull(c);
-		c = board.getCard("Kitchen");
+		c = board.getCard("Kitchen", "room");
 		Assert.assertNotNull(c);
 	}
 	
@@ -111,32 +98,32 @@ public class GameSetupTests {
 	
 	@Test
 	public void testAccusation() {
-		Card suspect = board.getCard("Miss Scarlett");
-		Card weapon = board.getCard("Candlestick");
-		Card room = board.getCard("Kitchen");
+		Card suspect = board.getCard("Miss Scarlett", "suspect");
+		Card weapon = board.getCard("Candlestick", "weapon");
+		Card room = board.getCard("Kitchen", "room");
 		board.setAnswer(suspect, room, weapon);
 		
 		Assert.assertTrue(board.checkAccusation(suspect, room, weapon));
 		
-		suspect = board.getCard("Mrs. Peacock");
-		Assert.assertFalse(true, board.checkAccusation(suspect, room, weapon));
+		suspect = board.getCard("Mrs. Peacock", "suspect");
+		Assert.assertFalse(board.checkAccusation(suspect, room, weapon));
 		
-		weapon = board.getCard("Mrs. Peacock");
-		Assert.assertTrue(true, board.checkAccusation(suspect, room, weapon));
+		weapon = board.getCard("Dagger", "weapon");
+		Assert.assertFalse(board.checkAccusation(suspect, room, weapon));
 		
-		room = board.getCard("Dining Hall");
-		Assert.assertTrue(true, board.checkAccusation(suspect, room, weapon));
+		room = board.getCard("Dining Hall", "room");
+		Assert.assertFalse(board.checkAccusation(suspect, room, weapon));
 	}
 	
 	@Test
 	public void testDisprovingSuggestion() {
-		Card suspect1 = board.getCard("Miss Scarlett");
-		Card weapon1 = board.getCard("Candlestick");
-		Card room1 = board.getCard("Kitchen");
+		Card suspect1 = board.getCard("Miss Scarlett", "suspect");
+		Card weapon1 = board.getCard("Candlestick", "weapon");
+		Card room1 = board.getCard("Kitchen", "room");
 		
-		Card suspect2 = board.getCard("Mrs. Peacock");
-		Card weapon2 = board.getCard("Dagger");
-		Card room2 = board.getCard("Dining Hall");
+		Card suspect2 = board.getCard("Mrs. Peacock", "suspect");
+		Card weapon2 = board.getCard("Dagger", "weapon");
+		Card room2 = board.getCard("Dining Hall", "room");
 		
 		Player p = new Player("Mrs. White", 0, 0);
 		p.addCard(suspect1);

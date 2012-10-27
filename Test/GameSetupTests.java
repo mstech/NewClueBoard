@@ -1,6 +1,8 @@
 package Test;
 
 
+import static org.junit.Assert.*;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +12,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import clueGame.Board;
+import clueGame.BoardCell;
 import clueGame.Card;
+import clueGame.ComputerPlayer;
 import clueGame.Player;
 
 
@@ -143,6 +147,41 @@ public class GameSetupTests {
 	
 	@Test
 	public void testSelectingTarget() {
+		//test room preference
+		ComputerPlayer testComp = new ComputerPlayer("Professor Plum", 1, 5);
+		board.calcTargets(board.calcIndex(1, 5), 3);
+		for(int i = 0; i < 100; i++) {
+			Assert.assertTrue(testComp.chooseMove(board.getTargets()).isDoorway());
+		}
+		
+		//test random room selection
+		board.calcTargets(board.calcIndex(3, 5), 2);
+		int loc_1_5Tot = 0;
+		int loc_5_5Tot = 0;
+		int loc_2_4Tot = 0;
+		int loc_4_4Tot = 0;
+		// Run the test 100 times
+		
+		for (int i=0; i<100; i++) {
+			BoardCell selected = testComp.chooseMove(board.getTargets());
+			if (selected == board.getCellAt(board.calcIndex(1, 5)))
+				loc_1_5Tot++;
+			else if (selected == board.getCellAt(board.calcIndex(5, 5)))
+				loc_5_5Tot++;
+			else if (selected == board.getCellAt(board.calcIndex(2, 4)))
+				loc_2_4Tot++;
+			else if(selected == board.getCellAt(board.calcIndex(4, 4)))
+				loc_4_4Tot++;
+			else
+				fail("Invalid target selected");
+		}
+		// Ensure we have 100 total selections (fail should also ensure)
+		assertEquals(100, loc_1_5Tot + loc_5_5Tot + loc_2_4Tot + loc_4_4Tot);
+		// Ensure each target was selected more than once
+		assertTrue(loc_1_5Tot > 10);
+		assertTrue(loc_5_5Tot > 10);
+		assertTrue(loc_2_4Tot > 10);	
+		assertTrue(loc_4_4Tot > 10);
 		
 	}
 	

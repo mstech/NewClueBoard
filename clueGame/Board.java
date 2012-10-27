@@ -285,8 +285,8 @@ public class Board {
 		return false;
 	}
 	
-	public void handleSuggestion(Card person, Card room, Card weapon) {
-		
+	public Player handleSuggestion(Card person, Card room, Card weapon) {
+		return null;
 	}
 	
 	public void deal() {

@@ -1,7 +1,11 @@
 package Test;
 
 
+
 import static org.junit.Assert.*;
+
+
+import java.util.ArrayList;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -121,6 +125,7 @@ public class GameSetupTests {
 	
 	@Test
 	public void testDisprovingSuggestion() {
+		//One player, One Correct Match
 		Card suspect1 = board.getCard("Miss Scarlett", "suspect");
 		Card weapon1 = board.getCard("Candlestick", "weapon");
 		Card room1 = board.getCard("Kitchen", "room");
@@ -128,6 +133,10 @@ public class GameSetupTests {
 		Card suspect2 = board.getCard("Mrs. Peacock", "suspect");
 		Card weapon2 = board.getCard("Dagger", "weapon");
 		Card room2 = board.getCard("Dining Hall", "room");
+		
+		Card suspect3 = board.getCard("Mrs. White", "suspect");
+		Card weapon3 = board.getCard("Lead Pipe", "weapon");
+		Card room3 = board.getCard("Ballroom", "room");
 		
 		Player p = new Player("Mrs. White", 0, 0);
 		p.addCard(suspect1);
@@ -143,6 +152,88 @@ public class GameSetupTests {
 		//none are right
 		Assert.assertNull(p.disproveSuggestion(suspect2, weapon2, room2));
 		
+		
+		//One player, multiple matches
+		int suspectDisproves = 0;
+		int weaponDisproves = 0;
+		int roomDisproves = 0;
+		
+		Card c;
+		for (int i = 0; i < 100; ++i) {
+			c = p.disproveSuggestion(suspect1, weapon1, room1);
+			if (c != null) {
+				switch (c.getCardType()) {
+				case SUSPECT:
+					suspectDisproves++;
+					break;
+				case WEAPON:
+					weaponDisproves++;
+					break;
+				case ROOM:
+					roomDisproves++;
+					break;
+				}
+			}
+		}
+		Assert.assertTrue(suspectDisproves != 0);
+		Assert.assertTrue(weaponDisproves != 0);
+		Assert.assertTrue(roomDisproves != 0);
+		
+		//Test all players are queried
+		//Only human can disprove the suspect
+		//Both computers have matching weapon
+		Player humanPlayer = board.getPlayer("Professor Plum");
+		Player computerPlayer = board.getPlayer("Miss Scarlett");
+		Player computerPlayer2 = board.getPlayer("Mrs. White");
+		
+		humanPlayer.addCard(suspect1);
+		computerPlayer.addCard(suspect2);
+		computerPlayer2.addCard(suspect2);
+		
+		humanPlayer.addCard(weapon2);
+		computerPlayer.addCard(weapon1);
+		computerPlayer2.addCard(weapon1);
+		
+		humanPlayer.addCard(room2);
+		computerPlayer.addCard(room2);
+		computerPlayer2.addCard(room2);
+		
+		List<Player> players = new ArrayList<Player>();
+		players.add(humanPlayer);
+		players.add(computerPlayer);
+		players.add(computerPlayer2);
+		
+		//check no matches
+		int matches = 0;
+		for (Player player : players) {
+			if (player.disproveSuggestion(suspect3, weapon3, room3) != null)
+				matches++;
+		}
+		Assert.assertEquals(0, matches);
+		
+		//check if human. Check if trying to find suspect1, since human is current player, should be 0
+		board.setCurrentPlayer(humanPlayer);
+		matches = 0;
+		for (Player player : players) {
+			if (player.disproveSuggestion(suspect1, weapon3, room3) != null)
+				matches++;
+		}
+		Assert.assertEquals(0, matches);
+		
+		
+		//check that handleSuggestion does not enforce an order
+		int comp1Matches = 0;
+		int comp2Matches = 0;
+		for (int i = 0; i < 100 ; i++) {
+			Player matchedPlayer = board.handleSuggestion(suspect1, room2, weapon2);
+			if (matchedPlayer.equals(computerPlayer)) {
+				comp1Matches++;
+			} else if (matchedPlayer.equals(computerPlayer2)) {
+				comp2Matches++;
+			}
+		}
+		Assert.assertTrue(comp1Matches != 0);
+		Assert.assertTrue(comp2Matches != 0);
 	}
 	
 	@Test

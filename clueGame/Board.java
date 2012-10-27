@@ -24,11 +24,13 @@ public class Board {
 	private LinkedList<Integer> currentPath;
 	
 	private Map<String, Player> players;
-	private Map<String, Card> cards;
+	private Map<String, Card> people;
+	private Map<String, Card> room;
+	private Map<String, Card> weapon;
+	private Card[] goal;
 	
 	private int numRows;
 	private int numColumns;
-	private int gridPieces;
 	
 	public Board() {
 		super();
@@ -39,9 +41,9 @@ public class Board {
 		currentPath = new LinkedList<Integer>();
 		visited = new LinkedList<Integer>();
 		players = new HashMap<String, Player>();
-		cards = new HashMap<String, Card>();
-		
-		gridPieces = numRows * numColumns;		
+		people = new HashMap<String, Card>();
+		room = new HashMap<String, Card>();
+		weapon = new HashMap<String, Card>();
 
 		loadConfigFiles();
 		calcAdjacencies();
@@ -149,12 +151,11 @@ public class Board {
 						name = name.substring(0, name.length() -1);
 						
 						if ("suspect".equalsIgnoreCase(elements[1])) {
-							cards.put(name, new Card(name, Card.CardType.SUSPECT));
+							people.put(name, new Card(name, Card.CardType.SUSPECT));
 						} else if ("weapon".equalsIgnoreCase(elements[1])) {
-							cards.put(name, new Card(name, Card.CardType.WEAPON));
-							System.out.println("Name: [" + name + "]");
+							weapon.put(name, new Card(name, Card.CardType.WEAPON));
 						} else if ("room".equalsIgnoreCase(elements[1])) {
-							cards.put(name, new Card(name, Card.CardType.ROOM));
+							room.put(name, new Card(name, Card.CardType.ROOM));
 						}
 					}
 				}
@@ -185,6 +186,7 @@ public class Board {
 					visited.pop();
 				}
 				currentPath.removeLast();
+
 			}
 		}
 	}
@@ -275,6 +277,23 @@ public class Board {
 		return true;
 	}
 	
+	public void setAnswer(Card person, Card room, Card weapon) {
+		
+	}
+	
+	public boolean checkAccusation(Card person, Card room, Card weapon) {
+		return false;
+	}
+	
+	public void handleSuggestion(Card person, Card room, Card weapon) {
+		
+	}
+	
+	public void Deal() {
+		
+	}
+	
+	
 	public RoomCell getRoomCellAt(int row, int col){
 		int index = calcIndex(row, col);
 		if (cells.get(index).isRoom())
@@ -315,15 +334,24 @@ public class Board {
 		return players;
 	}
 	
-	public Map<String, Card> getCards() {
-		return cards;
+	public Map<String, Card> getCards(String cardType) {
+		if(cardType.equals("people")) {
+			return people;
+		}
+		else if(cardType.equals("room")) {
+			return room;
+		}
+		else if(cardType.equals("weapon")) {
+			return weapon;
+		}
+		return null;
 	}
 	
 	public Player getPlayer(String name) {
 		return players.get(name);
 	}
 	
-	public Card getCard(String name) {
-		return cards.get(name);
+	public Card getCard(String cardType, String name) {
+		return getCards(cardType).get(name);
 	}
 }

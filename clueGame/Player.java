@@ -25,6 +25,10 @@ public class Player {
 		return cards;
 	}
 	
+	public Card[] makeSuggestion() {
+		return null;
+	}
+	
 	public Card disproveSuggestion(Card suspect, Card weapon, Card room) {
 		return null;
 	}

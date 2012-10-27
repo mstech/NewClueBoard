@@ -34,6 +34,7 @@ public class Board {
 	
 	private Player currentPlayer;
 	private Card matchedCard;
+	private ArrayList<Card> seen;
 	
 	public Board() {
 		super();
@@ -47,6 +48,7 @@ public class Board {
 		suspect = new HashMap<String, Card>();
 		room = new HashMap<String, Card>();
 		weapon = new HashMap<String, Card>();
+		seen = new ArrayList<Card>();
 
 		loadConfigFiles();
 		calcAdjacencies();
@@ -363,5 +365,13 @@ public class Board {
 	
 	public Card getCard(String cardType, String name) {
 		return getCards(cardType).get(name);
+	}
+	
+	public ArrayList getSeen() {
+		return seen;
+	}
+	
+	public void setSeen(ArrayList seen) {
+		this.seen = seen;
 	}
 }

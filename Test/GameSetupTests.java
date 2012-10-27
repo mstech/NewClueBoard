@@ -18,8 +18,10 @@ import org.junit.Test;
 import clueGame.Board;
 import clueGame.BoardCell;
 import clueGame.Card;
+import clueGame.Card.CardType;
 import clueGame.ComputerPlayer;
 import clueGame.Player;
+import clueGame.RoomCell;
 
 
 public class GameSetupTests {
@@ -239,9 +241,10 @@ public class GameSetupTests {
 	@Test
 	public void testSelectingTarget() {
 		//test room preference
-		ComputerPlayer testComp = new ComputerPlayer("Professor Plum", 1, 5);
-		board.calcTargets(board.calcIndex(1, 5), 3);
+		ComputerPlayer testComp = new ComputerPlayer("Mrs. White", 1, 5);
+		// Test that given the choice of entering a room or moving to a walkway the computer chooses the room.
 		for(int i = 0; i < 100; i++) {
+			board.calcTargets(board.calcIndex(1, 5), 3);
 			Assert.assertTrue(testComp.chooseMove(board.getTargets()).isDoorway());
 		}
 		
@@ -278,6 +281,24 @@ public class GameSetupTests {
 	
 	@Test
 	public void testMakingSuggestion() {
+		ComputerPlayer testComp = new ComputerPlayer("Mrs. White", 0, 3);
+		// add some cards to the seen ArrayList
+		board.getSeen().add(new Card("Knife", CardType.WEAPON));
+		board.getSeen().add(new Card("Professor Plum", CardType.SUSPECT));
+		board.getSeen().add(new Card("Mrs. White", CardType.SUSPECT));
+		board.getSeen().add(new Card("Rope", CardType.WEAPON));
+		board.getSeen().add(new Card("Miss Scarlett", CardType.SUSPECT));
+		board.getSeen().add(new Card("Candlestick", CardType.WEAPON));
+		
+		Card[] suggestion = testComp.makeSuggestion();
+		
+		// Check for each element in seen that it does not equal one of our guesses.
+		for(int i  = 0; i < board.getSeen().size(); i++ ) {
+			for(int j = 0; j < suggestion.length; j++) {
+				assertFalse(board.getSeen().get(i).equals(suggestion[j]));
+			}
+		}
+		
 		
 	}
 	

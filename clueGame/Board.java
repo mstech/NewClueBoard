@@ -32,6 +32,9 @@ public class Board {
 	private int numRows;
 	private int numColumns;
 	
+	private Player currentPlayer;
+	private Card matchedCard;
+	
 	public Board() {
 		super();
 		cells = new ArrayList<BoardCell>();
@@ -281,6 +284,10 @@ public class Board {
 		
 	}
 	
+	public void setCurrentPlayer(Player p) {
+		this.currentPlayer = p;
+	}
+	
 	public boolean checkAccusation(Card person, Card room, Card weapon) {
 		return false;
 	}
@@ -293,6 +300,9 @@ public class Board {
 		
 	}
 	
+	public Card getMatchedCard() {
+		return matchedCard;
+	}
 	
 	public RoomCell getRoomCellAt(int row, int col){
 		int index = calcIndex(row, col);

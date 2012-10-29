@@ -67,11 +67,11 @@ public class GameSetupTests {
 		Assert.assertEquals(6, weapons.size());
 		Assert.assertEquals(9, rooms.size());
 		
-		Card c = board.getCard("Miss Scarlett", "suspect");
+		Card c = board.getCard("suspect", "Miss Scarlett");
 		Assert.assertNotNull(c);
-		c = board.getCard("Candlestick", "weapon");
+		c = board.getCard("weapon", "Candlestick");
 		Assert.assertNotNull(c);
-		c = board.getCard("Kitchen", "room");
+		c = board.getCard("room", "Kitchen");
 		Assert.assertNotNull(c);
 	}
 	

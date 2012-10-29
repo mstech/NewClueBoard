@@ -19,14 +19,12 @@ public class Card {
 	
 	@Override
 	public boolean equals(Object toCompare) {
-		/*boolean equal = false;
+		boolean equal = false;
 		if(toCompare instanceof Card ) {
 			Card tocompare = (Card) toCompare;
-			equal = this.cardType == tocompare.cardType && this.name.equalsIgnoreCase(tocompare.name)
+			equal = this.cardType == tocompare.cardType && this.name.equalsIgnoreCase(tocompare.name);
 		}
 		return equal;
-		*/
-		return false;
 	}
 
 	public String getName() {

@@ -318,19 +318,18 @@ public class Board {
 	
 	public Player handleSuggestion(Card suspect, Card weapon, Card room) {
 		
-		
+		/*
 		for (String key : players.keySet()) {
 			Player p = players.get(key);
 			if (p == currentPlayer) continue;
 			
 			Card c = p.disproveSuggestion(suspect, weapon, room);
 			if (c != null) {
-				System.out.println("Matched " + p.getName() + " with " + c.getName());
+				//System.out.println("Matched " + p.getName() + " with " + c.getName());
 				return p;
 			}
 		}
-		
-		/*
+		*/
 		
 		Map<String, Player> copyPlayers = new HashMap<String, Player>(players);
 		while (!copyPlayers.isEmpty()) {
@@ -346,13 +345,12 @@ public class Board {
 			
 			Card c = p.disproveSuggestion(suspect, weapon, room); 
 			if (c != null) {
-				System.out.println(c.getName() + " => " + p.getName());
 				return p;
 			}		
 			
 			copyPlayers.remove(key);
 		}
-		*/
+		
 		return null;
 	}
 	

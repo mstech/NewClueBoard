@@ -1,5 +1,7 @@
 package clueGame;
 
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.Random;
 
 public class Player {
@@ -7,9 +9,10 @@ public class Player {
 	public static final int MAX_CARD_HAND = 3;
 	
 	private String name; 
-	private Card[] cards; // Index 0 is suspect. Index 1 is weapon. Index 2 is room;
+	private Card[] cards; // Index 0 is suspect. Index 2 is weapon. Index 1 is room;
 	private int startX;
 	private int startY;
+	private String room;
 
 	public Player(String name, int startX, int startY) {
 		this.name = name;
@@ -34,8 +37,29 @@ public class Player {
 		return cards;
 	}
 	
-	public Card[] makeSuggestion() {
-		return null;
+	public Card[] makeSuggestion(Board b) {
+		Card[] ret = new Card[3];
+		
+		ArrayList<Card> seen = b.getSeen();
+		Map<String, Card> cards = b.getCards("suspect");
+		
+		for (Card c : cards.values()) {
+			if (!seen.contains(c)) {
+				ret[0] = c;
+				break;
+			}
+		}
+		
+		cards = b.getCards("weapon");
+		for (Card c : cards.values()) {
+			if (!seen.contains(c)) {
+				ret[2] = c;
+				break;
+			}
+		}
+		
+		ret[1] = b.getCard("room", room);
+		return ret;
 	}
 	
 	public Card disproveSuggestion(Card suspect, Card weapon, Card room) {
@@ -55,7 +79,9 @@ public class Player {
 	public void addCard(Card c, int index) {
 		cards[index] = c;
 	}
-	
+	public void setRoom(String s) {
+		room = s;
+	}
 	public boolean equals(Player other) {
 		return (this.name == other.getName());
 	}

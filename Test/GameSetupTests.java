@@ -77,7 +77,6 @@ public class GameSetupTests {
 	
 	@Test
 	public void testUniqueAndFairCardDistribution() {
-		board.deal();
 		Map<String, Player> players = board.getPlayers();
 		
 		int numCards = 3;
@@ -141,9 +140,9 @@ public class GameSetupTests {
 		Card room3 = board.getCard("room", "Ballroom");
 		
 		Player p = new Player("Mrs. White", 0, 0);
-		p.addCard(suspect1);
-		p.addCard(weapon1);
-		p.addCard(room1);
+		p.addCard(suspect1, 0);
+		p.addCard(weapon1, 1);
+		p.addCard(room1, 2);
 		
 		//suspect is right
 		Assert.assertNotNull(p.disproveSuggestion(suspect1, weapon2, room2));
@@ -188,17 +187,17 @@ public class GameSetupTests {
 		Player computerPlayer = board.getPlayer("Miss Scarlett");
 		Player computerPlayer2 = board.getPlayer("Mrs. White");
 		
-		humanPlayer.addCard(suspect1);
-		computerPlayer.addCard(suspect2);
-		computerPlayer2.addCard(suspect2);
+		humanPlayer.addCard(suspect1, 0);
+		computerPlayer.addCard(suspect2, 0);
+		computerPlayer2.addCard(suspect2, 0);
 		
-		humanPlayer.addCard(weapon2);
-		computerPlayer.addCard(weapon1);
-		computerPlayer2.addCard(weapon1);
+		humanPlayer.addCard(weapon2, 1);
+		computerPlayer.addCard(weapon1, 1);
+		computerPlayer2.addCard(weapon1, 1);
 		
-		humanPlayer.addCard(room2);
-		computerPlayer.addCard(room2);
-		computerPlayer2.addCard(room2);
+		humanPlayer.addCard(room2, 2);
+		computerPlayer.addCard(room2, 2);
+		computerPlayer2.addCard(room2, 2);
 		
 		List<Player> players = new ArrayList<Player>();
 		players.add(humanPlayer);

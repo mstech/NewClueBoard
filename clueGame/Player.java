@@ -4,6 +4,8 @@ import clueGame.Card.CardType;
 
 public class Player {
 
+	public static final int MAX_CARD_HAND = 3;
+	
 	private String name; 
 	private Card[] cards; // Index 0 is suspect. Index 1 is room. Index 2 is weapon;
 	private int startX;
@@ -13,6 +15,7 @@ public class Player {
 		this.name = name;
 		this.startX = startX;
 		this.startY = startY;
+		cards = new Card[MAX_CARD_HAND];
 	}
 	
 	public int getX() {
@@ -35,16 +38,8 @@ public class Player {
 		return null;
 	}
 	
-	public void addCard(Card c) {
-		if(c.getCardType()== CardType.SUSPECT) {
-			cards[0] = c;
-		}
-		else if(c.getCardType()== CardType.ROOM) {
-			cards[1] = c;
-		}
-		else if(c.getCardType()== CardType.WEAPON) {
-			cards[2] = c;
-		}
+	public void addCard(Card c, int index) {
+		cards[index] = c;
 	}
 	
 }

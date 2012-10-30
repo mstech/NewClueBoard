@@ -106,9 +106,12 @@ public class GameSetupTests {
 	
 	@Test
 	public void testAccusation() {
+		Card[] oldGoal = board.getAnswer();
+		
 		Card suspect = board.getCard("suspect", "Miss Scarlett");
-		Card weapon = board.getCard("weapon", "Candlestick");
 		Card room = board.getCard("room", "Kitchen");
+		Card weapon = board.getCard("weapon", "Candlestick");
+		
 		board.setAnswer(suspect, room, weapon);
 		
 		Assert.assertTrue(board.checkAccusation(suspect, room, weapon));
@@ -121,6 +124,8 @@ public class GameSetupTests {
 		
 		room = board.getCard("room", "Dining Hall");
 		Assert.assertFalse(board.checkAccusation(suspect, room, weapon));
+		
+		board.setAnswer(oldGoal[0], oldGoal[1], oldGoal[2]);
 	}
 	
 	@Test
@@ -213,23 +218,25 @@ public class GameSetupTests {
 		
 		//check if human. Check if trying to find suspect1, since human is current player, should be 0
 		board.setCurrentPlayer(humanPlayer);
-		matches = 0;
-		for (Player player : players) {
-			if (player.disproveSuggestion(suspect1, weapon3, room3) != null)
-				matches++;
-		}
-		Assert.assertEquals(0, matches);
+		Card[] goal = board.getAnswer();
+		Player match = board.handleSuggestion(board.getPlayer("Professor Plum").getCards()[0], goal[2], goal[1]);
+		System.out.println(match.getName());
+		Assert.assertNull(match);
 		
 		
 		//check that handleSuggestion does not enforce an order
+		board.resetCurrentPlayer();
 		int comp1Matches = 0;
 		int comp2Matches = 0;
+		int humanMatches = 0;
 		for (int i = 0; i < 100 ; i++) {
-			Player matchedPlayer = board.handleSuggestion(suspect1, room2, weapon2);
+			Player matchedPlayer = board.handleSuggestion(suspect1, weapon2, room2);
 			if (matchedPlayer.equals(computerPlayer)) {
 				comp1Matches++;
 			} else if (matchedPlayer.equals(computerPlayer2)) {
 				comp2Matches++;
+			} else if (matchedPlayer.equals(humanPlayer)) {
+				humanMatches++;
 			}
 		}
 		Assert.assertTrue(comp1Matches != 0);
@@ -290,6 +297,7 @@ public class GameSetupTests {
 		
 		Card[] suggestion = testComp.makeSuggestion();
 		
+		Assert.assertNotNull(suggestion);
 		// Check for each element in seen that it does not equal one of our guesses.
 		for(int i  = 0; i < board.getSeen().size(); i++ ) {
 			for(int j = 0; j < suggestion.length; j++) {

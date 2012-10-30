@@ -21,7 +21,6 @@ import clueGame.Card;
 import clueGame.Card.CardType;
 import clueGame.ComputerPlayer;
 import clueGame.Player;
-import clueGame.RoomCell;
 
 
 public class GameSetupTests {

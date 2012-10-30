@@ -371,11 +371,11 @@ public class Board {
 		return getCards(cardType).get(name);
 	}
 	
-	public ArrayList getSeen() {
+	public ArrayList<Card> getSeen() {
 		return seen;
 	}
 	
-	public void setSeen(ArrayList seen) {
+	public void setSeen(ArrayList<Card> seen) {
 		this.seen = seen;
 	}
 }

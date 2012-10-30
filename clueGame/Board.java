@@ -58,6 +58,8 @@ public class Board {
 		loadConfigFiles();
 		calcAdjacencies();
 		deal();
+		
+		//lol
 	}
 
 	private void loadConfigFiles(){
@@ -319,17 +321,18 @@ public class Board {
 		
 		for (String key : players.keySet()) {
 			Player p = players.get(key);
-			System.out.println("Key: " + key);
 			if (p == currentPlayer) continue;
 			
 			Card c = p.disproveSuggestion(suspect, weapon, room);
-			if (c != null)
+			if (c != null) {
+				System.out.println("Matched " + p.getName() + " with " + c.getName());
 				return p;
+			}
 		}
 		
 		/*
+		
 		Map<String, Player> copyPlayers = new HashMap<String, Player>(players);
-		System.out.println("Size: " + copyPlayers.size());
 		while (!copyPlayers.isEmpty()) {
 			List<String> keys = new ArrayList<String>(copyPlayers.keySet());
 			int randomPlayer = new Random().nextInt(copyPlayers.size());
@@ -343,13 +346,12 @@ public class Board {
 			
 			Card c = p.disproveSuggestion(suspect, weapon, room); 
 			if (c != null) {
-				System.out.println(c.getName());
+				System.out.println(c.getName() + " => " + p.getName());
 				return p;
 			}		
 			
 			copyPlayers.remove(key);
 		}
-		
 		*/
 		return null;
 	}
@@ -359,41 +361,47 @@ public class Board {
 		Map<String, Card> copyRooms = new HashMap<String, Card>(room);
 		Map<String, Card> copyWeapons = new HashMap<String, Card>(weapon);
 		// adds suspects goal card
+		Iterator iter = copySuspects.entrySet().iterator();
 		int randomCard = new Random().nextInt(copySuspects.size());
 		int i = 0;
-		for (String c : copySuspects.keySet()) {
-			if (i == randomCard) {
-				goal[0] = copySuspects.get(c);
-				copySuspects.remove(c);
+		while(iter.hasNext()) {
+			Map.Entry cardEntry = (Map.Entry) iter.next();
+			if(i == randomCard) {
+				goal[0] = (Card) cardEntry.getValue();
+				System.out.println("Suspect: " + goal[0].getName());
+				copySuspects.remove(cardEntry.getKey());
 				break;
 			}
-		}
-		
-		
-		
-		// add weapon goal card.
-		randomCard = new Random().nextInt(copyWeapons.size());
-		i = 0;
-		for (String c : copyWeapons.keySet()) {
-			if (i == randomCard) {
-				goal[2] = copyWeapons.get(c);
-				copyWeapons.remove(c);
-				break;
-			}
+			i++;
 		}
 		// add room goal card.
+		iter = copyRooms.entrySet().iterator();
 		randomCard = new Random().nextInt(copyRooms.size());
 		i = 0;
-		for (String c : copyRooms.keySet()) {
-			if (i == randomCard) {
-				goal[1] = copyRooms.get(c);
-				copyRooms.remove(c);
+		while(iter.hasNext()) {
+			Map.Entry cardEntry = (Map.Entry) iter.next();
+			if(i == randomCard) {
+				goal[1] = (Card) cardEntry.getValue();
+				System.out.println("Room: " + goal[1].getName());
+				copyRooms.remove(cardEntry.getKey());
 				break;
-			}
+			}	
+			i++;
 		}
-		
-		Iterator iter = copySuspects.entrySet().iterator();
-		
+		// add weapon goal card.
+		iter = copyWeapons.entrySet().iterator();
+		randomCard = new Random().nextInt(copyWeapons.size());
+		i = 0;
+		while(iter.hasNext()) {
+			Map.Entry cardEntry = (Map.Entry) iter.next();
+			if(i == randomCard) {
+				goal[2] = (Card) cardEntry.getValue();
+				System.out.println("Weapon: " + goal[2].getName());
+				copyWeapons.remove(cardEntry.getKey());
+				break;
+			}	
+			i++;
+		}
 		// map holds all cards except goal cards.
 		Map<String, Card> cards = new HashMap<String, Card>();
 		// adds the suspect cards to cards.

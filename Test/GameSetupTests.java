@@ -106,7 +106,7 @@ public class GameSetupTests {
 	
 	@Test
 	public void testAccusation() {
-		Card[] oldGoal = board.getAnswer();
+		Card[] oldGoal = board.getAnswer().clone();
 		
 		Card suspect = board.getCard("suspect", "Miss Scarlett");
 		Card room = board.getCard("room", "Kitchen");
@@ -218,9 +218,8 @@ public class GameSetupTests {
 		
 		//check if human. Check if trying to find suspect1, since human is current player, should be 0
 		board.setCurrentPlayer(humanPlayer);
-		Card[] goal = board.getAnswer();
+		Card[] goal = board.getAnswer().clone();
 		Player match = board.handleSuggestion(board.getPlayer("Professor Plum").getCards()[0], goal[2], goal[1]);
-		System.out.println(match.getName());
 		Assert.assertNull(match);
 		
 		
@@ -230,12 +229,17 @@ public class GameSetupTests {
 		int comp2Matches = 0;
 		int humanMatches = 0;
 		for (int i = 0; i < 100 ; i++) {
-			Player matchedPlayer = board.handleSuggestion(suspect1, weapon2, room2);
-			if (matchedPlayer.equals(computerPlayer)) {
+			Player matchedPlayer = board.handleSuggestion(board.getPlayer("Professor Plum").getCards()[0], board.getPlayer("Miss Scarlett").getCards()[1], board.getPlayer("Mrs. White").getCards()[2]);
+			if (matchedPlayer == null) {
+				System.out.println("Null");
+				continue;
+			}
+				
+			if (matchedPlayer.equals(board.getPlayer("Miss Scarlett"))) {
 				comp1Matches++;
-			} else if (matchedPlayer.equals(computerPlayer2)) {
+			} else if (matchedPlayer.equals(board.getPlayer("Mrs. White"))) {
 				comp2Matches++;
-			} else if (matchedPlayer.equals(humanPlayer)) {
+			} else if (matchedPlayer.equals(board.getPlayer("Professor Plum"))) {
 				humanMatches++;
 			}
 		}

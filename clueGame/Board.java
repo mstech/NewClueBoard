@@ -5,8 +5,10 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeMap;
@@ -15,6 +17,7 @@ public class Board {
 	public static final String LEGEND_FILENAME = "legend.txt";
 	public static final String LAYOUT_FILENAME = "Clue Layout.csv";
 	public static final String CARDANDPLAYERS_FILENAME = "PeopleAndCards.txt";
+	public static final int MAX_CARD_HAND = 3;
 	
 	private ArrayList<BoardCell> cells;
 	private Map<Character, String> rooms;
@@ -27,7 +30,7 @@ public class Board {
 	private Map<String, Card> suspect;
 	private Map<String, Card> room;
 	private Map<String, Card> weapon;
-	private Card[] goal; // Index 0 is person. Index 1 is room. Index 2 is weapon.
+	private Card[] goal; // Index 0 is suspect. Index 1 is room. Index 2 is weapon.
 	
 	private int numRows;
 	private int numColumns;
@@ -49,9 +52,11 @@ public class Board {
 		room = new HashMap<String, Card>();
 		weapon = new HashMap<String, Card>();
 		seen = new ArrayList<Card>();
+		goal = new Card[MAX_CARD_HAND];
 
 		loadConfigFiles();
 		calcAdjacencies();
+		deal();
 	}
 
 	private void loadConfigFiles(){
@@ -283,6 +288,9 @@ public class Board {
 	}
 	
 	public void setAnswer(Card person, Card room, Card weapon) {
+		goal[0] = person;
+		goal[1] = room;
+		goal[2] = weapon;
 		
 	}
 	
@@ -303,8 +311,93 @@ public class Board {
 	}
 	
 	public void deal() {
+		Map<String, Card> copySuspects = new HashMap<String, Card>(suspect);
+		Map<String, Card> copyRooms = new HashMap<String, Card>(room);
+		Map<String, Card> copyWeapons = new HashMap<String, Card>(weapon);
+		// adds suspects goal card
+		Iterator iter = copySuspects.entrySet().iterator();
+		int randomCard = new Random().nextInt(copySuspects.size());
+		int i = 0;
+		while(iter.hasNext()) {
+			Map.Entry cardEntry = (Map.Entry) iter.next();
+			if(i == randomCard) {
+				goal[0] = (Card) cardEntry.getValue();
+				copySuspects.remove(cardEntry.getKey());
+				break;
+			}
+			i++;
+		}
+		// add room goal card.
+		iter = copyRooms.entrySet().iterator();
+		randomCard = new Random().nextInt(copyRooms.size());
+		i = 0;
+		while(iter.hasNext()) {
+			Map.Entry cardEntry = (Map.Entry) iter.next();
+			if(i == randomCard) {
+				goal[1] = (Card) cardEntry.getValue();
+				copyRooms.remove(cardEntry.getKey());
+				break;
+			}	
+			i++;
+		}
+		// add weapon goal card.
+		iter = copyWeapons.entrySet().iterator();
+		randomCard = new Random().nextInt(copyWeapons.size());
+		i = 0;
+		while(iter.hasNext()) {
+			Map.Entry cardEntry = (Map.Entry) iter.next();
+			if(i == randomCard) {
+				goal[2] = (Card) cardEntry.getValue();
+				copyWeapons.remove(cardEntry.getKey());
+				break;
+			}	
+			i++;
+		}
+		// map holds all cards except goal cards.
+		Map<String, Card> cards = new HashMap<String, Card>();
+		iter = copySuspects.entrySet().iterator();
+		while(iter.hasNext()) {
+			Map.Entry cardEntry = (Map.Entry) iter.next(); 
+			cards.put((String) cardEntry.getKey(), (Card) cardEntry.getValue());
+		}
+		
+		// adds the room cards to cards.
+		iter = copyRooms.entrySet().iterator();
+		while(iter.hasNext()) {
+			Map.Entry cardEntry = (Map.Entry) iter.next(); 
+			cards.put((String) cardEntry.getKey(), (Card) cardEntry.getValue());
+		}
+		iter = copyWeapons.entrySet().iterator();
+		// adds the weapons cards to cards.
+		while(iter.hasNext()) {
+			Map.Entry cardEntry = (Map.Entry) iter.next(); 
+			cards.put((String) cardEntry.getKey(), (Card) cardEntry.getValue());
+		}
+		
+		
+		Iterator playersIter = players.entrySet().iterator();
+		while(playersIter.hasNext()) {
+			Map.Entry playerEntry = (Map.Entry) playersIter.next();
+			Player player = (Player) playerEntry.getValue();
+			for(int j = 0; j < MAX_CARD_HAND; j++) {
+				iter = cards.entrySet().iterator();
+				randomCard = new Random().nextInt(cards.size());
+				i = 0;
+				while(iter.hasNext()) {
+					Map.Entry<String, Card> entry = (Map.Entry) iter.next();
+					if(i == randomCard) {
+						player.addCard(entry.getValue(), j);
+						cards.remove(entry.getKey());
+						break;
+					}
+					i++;
+				}
+			}
+		}
+		
 		
 	}
+	
 	
 	public Card getMatchedCard() {
 		return matchedCard;

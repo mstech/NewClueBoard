@@ -353,8 +353,9 @@ public class Board {
 			}	
 			i++;
 		}
-		// map holds all cards except goal cards.
+		// Map cards will hold all cards except the goal cards.
 		Map<String, Card> cards = new HashMap<String, Card>();
+		// adds the suspect cards to cards.
 		iter = copySuspects.entrySet().iterator();
 		while(iter.hasNext()) {
 			Map.Entry cardEntry = (Map.Entry) iter.next(); 
@@ -374,7 +375,7 @@ public class Board {
 			cards.put((String) cardEntry.getKey(), (Card) cardEntry.getValue());
 		}
 		
-		
+		// deals 3 unique cards to every player.
 		Iterator playersIter = players.entrySet().iterator();
 		while(playersIter.hasNext()) {
 			Map.Entry playerEntry = (Map.Entry) playersIter.next();

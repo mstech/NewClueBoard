@@ -108,37 +108,37 @@ public class GameSetupTests {
 	
 	@Test
 	public void testAccusation() {
-		Card suspect = board.getCard("Miss Scarlett", "suspect");
-		Card weapon = board.getCard("Candlestick", "weapon");
-		Card room = board.getCard("Kitchen", "room");
+		Card suspect = board.getCard("suspect", "Miss Scarlett");
+		Card weapon = board.getCard("weapon", "Candlestick");
+		Card room = board.getCard("room", "Kitchen");
 		board.setAnswer(suspect, room, weapon);
 		
 		Assert.assertTrue(board.checkAccusation(suspect, room, weapon));
 		
-		suspect = board.getCard("Mrs. Peacock", "suspect");
+		suspect = board.getCard("suspect", "Mrs. Peacock");
 		Assert.assertFalse(board.checkAccusation(suspect, room, weapon));
 		
-		weapon = board.getCard("Dagger", "weapon");
+		weapon = board.getCard("weapon", "Dagger");
 		Assert.assertFalse(board.checkAccusation(suspect, room, weapon));
 		
-		room = board.getCard("Dining Hall", "room");
+		room = board.getCard("room", "Dining Hall");
 		Assert.assertFalse(board.checkAccusation(suspect, room, weapon));
 	}
 	
 	@Test
 	public void testDisprovingSuggestion() {
 		//One player, One Correct Match
-		Card suspect1 = board.getCard("Miss Scarlett", "suspect");
-		Card weapon1 = board.getCard("Candlestick", "weapon");
-		Card room1 = board.getCard("Kitchen", "room");
+		Card suspect1 = board.getCard("suspect", "Miss Scarlett");
+		Card weapon1 = board.getCard("weapon", "Candlestick");
+		Card room1 = board.getCard("room", "Kitchen");
 		
-		Card suspect2 = board.getCard("Mrs. Peacock", "suspect");
-		Card weapon2 = board.getCard("Dagger", "weapon");
-		Card room2 = board.getCard("Dining Hall", "room");
+		Card suspect2 = board.getCard("suspect", "Mrs. Peacock");
+		Card weapon2 = board.getCard("weapon", "Dagger");
+		Card room2 = board.getCard("room", "Dining Hall");
 		
-		Card suspect3 = board.getCard("Mrs. White", "suspect");
-		Card weapon3 = board.getCard("Lead Pipe", "weapon");
-		Card room3 = board.getCard("Ballroom", "room");
+		Card suspect3 = board.getCard("suspect", "Mrs. White");
+		Card weapon3 = board.getCard("weapon", "Lead Pipe");
+		Card room3 = board.getCard("room", "Ballroom");
 		
 		Player p = new Player("Mrs. White", 0, 0);
 		p.addCard(suspect1);
@@ -249,33 +249,33 @@ public class GameSetupTests {
 		}
 		
 		//test random room selection
-		board.calcTargets(board.calcIndex(3, 5), 2);
-		int loc_1_5Tot = 0;
-		int loc_5_5Tot = 0;
-		int loc_2_4Tot = 0;
-		int loc_4_4Tot = 0;
-		// Run the test 100 times
+		board.calcTargets(board.calcIndex(3, 13), 2);
+		int loc_1_13Tot = 0;
+		int loc_5_13Tot = 0;
+		int loc_2_12Tot = 0;
+		int loc_4_12Tot = 0;
 		
+		// Run the test 100 times
 		for (int i=0; i<100; i++) {
 			BoardCell selected = testComp.chooseMove(board.getTargets());
-			if (selected == board.getCellAt(board.calcIndex(1, 5)))
-				loc_1_5Tot++;
-			else if (selected == board.getCellAt(board.calcIndex(5, 5)))
-				loc_5_5Tot++;
-			else if (selected == board.getCellAt(board.calcIndex(2, 4)))
-				loc_2_4Tot++;
-			else if(selected == board.getCellAt(board.calcIndex(4, 4)))
-				loc_4_4Tot++;
+			if (selected == board.getCellAt(board.calcIndex(1, 13)))
+				loc_1_13Tot++;
+			else if (selected == board.getCellAt(board.calcIndex(5, 13)))
+				loc_5_13Tot++;
+			else if (selected == board.getCellAt(board.calcIndex(2, 12)))
+				loc_2_12Tot++;
+			else if(selected == board.getCellAt(board.calcIndex(4, 12)))
+				loc_4_12Tot++;
 			else
 				fail("Invalid target selected");
 		}
 		// Ensure we have 100 total selections (fail should also ensure)
-		assertEquals(100, loc_1_5Tot + loc_5_5Tot + loc_2_4Tot + loc_4_4Tot);
+		assertEquals(100, loc_1_13Tot + loc_5_13Tot + loc_2_12Tot + loc_4_12Tot);
 		// Ensure each target was selected more than once
-		assertTrue(loc_1_5Tot > 10);
-		assertTrue(loc_5_5Tot > 10);
-		assertTrue(loc_2_4Tot > 10);	
-		assertTrue(loc_4_4Tot > 10);
+		assertTrue(loc_1_13Tot > 10);
+		assertTrue(loc_5_13Tot > 10);
+		assertTrue(loc_2_12Tot > 10);	
+		assertTrue(loc_4_12Tot > 10);
 		
 	}
 	

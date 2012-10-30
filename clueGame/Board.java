@@ -27,7 +27,7 @@ public class Board {
 	private Map<String, Card> suspect;
 	private Map<String, Card> room;
 	private Map<String, Card> weapon;
-	private Card[] goal;
+	private Card[] goal; // Index 0 is person. Index 1 is room. Index 2 is weapon.
 	
 	private int numRows;
 	private int numColumns;
@@ -291,7 +291,11 @@ public class Board {
 	}
 	
 	public boolean checkAccusation(Card person, Card room, Card weapon) {
+		if(person.equals(goal[0]) && room.equals(goal[1]) && weapon.equals(goal[2])) {
+			return true;
+		}
 		return false;
+		
 	}
 	
 	public Player handleSuggestion(Card person, Card room, Card weapon) {

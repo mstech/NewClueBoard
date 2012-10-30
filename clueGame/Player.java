@@ -1,9 +1,11 @@
 package clueGame;
 
+import clueGame.Card.CardType;
+
 public class Player {
 
 	private String name; 
-	private Card[] cards;
+	private Card[] cards; // Index 0 is suspect. Index 1 is room. Index 2 is weapon;
 	private int startX;
 	private int startY;
 
@@ -34,7 +36,15 @@ public class Player {
 	}
 	
 	public void addCard(Card c) {
-		
+		if(c.getCardType()== CardType.SUSPECT) {
+			cards[0] = c;
+		}
+		else if(c.getCardType()== CardType.ROOM) {
+			cards[1] = c;
+		}
+		else if(c.getCardType()== CardType.WEAPON) {
+			cards[2] = c;
+		}
 	}
 	
 }

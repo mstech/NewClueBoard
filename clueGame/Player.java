@@ -1,5 +1,7 @@
 package clueGame;
 
+import java.awt.Color;
+import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
@@ -84,6 +86,33 @@ public class Player {
 	}
 	public boolean equals(Player other) {
 		return (this.name == other.getName());
+	}
+	
+	public void draw(Graphics g) {
+		if(name.equals("Miss Scarlett")) {
+				g.setColor(Color.RED);
+				g.fillOval(startX*BoardCell.SIDE_LENGTH, startY*BoardCell.SIDE_LENGTH, BoardCell.SIDE_LENGTH, BoardCell.SIDE_LENGTH);
+		}
+		else if(name.equals("Colonel Mustard")) {
+			g.setColor(Color.ORANGE);
+			g.fillOval(startX*BoardCell.SIDE_LENGTH, startY*BoardCell.SIDE_LENGTH, BoardCell.SIDE_LENGTH, BoardCell.SIDE_LENGTH);
+		}
+		else if(name.equals("Mrs. White")) {
+			g.setColor(Color.WHITE);
+			g.fillOval(startX*BoardCell.SIDE_LENGTH, startY*BoardCell.SIDE_LENGTH, BoardCell.SIDE_LENGTH, BoardCell.SIDE_LENGTH);
+		}
+		else if(name.equals("Reverend Green")) {
+			g.setColor(Color.GREEN);
+			g.fillOval(startX*BoardCell.SIDE_LENGTH, startY*BoardCell.SIDE_LENGTH, BoardCell.SIDE_LENGTH, BoardCell.SIDE_LENGTH);
+		}
+		else if(name.equals("Mrs. Peacock")) {
+			g.setColor(Color.MAGENTA);
+			g.fillOval(startX*BoardCell.SIDE_LENGTH, startY*BoardCell.SIDE_LENGTH, BoardCell.SIDE_LENGTH, BoardCell.SIDE_LENGTH);
+		}
+		else if(name.equals("Professor Plum")) {
+			g.setColor(Color.BLUE);
+			g.fillOval(startX*BoardCell.SIDE_LENGTH, startY*BoardCell.SIDE_LENGTH, BoardCell.SIDE_LENGTH, BoardCell.SIDE_LENGTH);
+		}
 	}
 	
 }

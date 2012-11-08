@@ -1,5 +1,6 @@
 package clueGame;
 
+import java.awt.Graphics;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -9,12 +10,15 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeMap;
 
-public class Board {
+import javax.swing.JPanel;
+
+public class Board extends JPanel {
 	public static final String LEGEND_FILENAME = "legend.txt";
 	public static final String LAYOUT_FILENAME = "Clue Layout.csv";
 	public static final String CARDANDPLAYERS_FILENAME = "PeopleAndCards.txt";
@@ -67,6 +71,10 @@ public class Board {
 			loadLegend(LEGEND_FILENAME);
 			loadLayout(LAYOUT_FILENAME);
 			loadCardsAndPeople(CARDANDPLAYERS_FILENAME);
+			for(int i = 0; i < cells.size(); i++) {
+				cells.get(i).setRow(i%numColumns);
+				cells.get(i).setColumn(i/numColumns);
+			}
 		} catch (BadConfigFormatException e){
 			System.out.println(e.toString());
 		}
@@ -124,6 +132,7 @@ public class Board {
 			}
 			
 			readLayout.close();
+			
 		} catch (FileNotFoundException e){
 			System.out.println("Can't find the layout file: " + layout);
 		}
@@ -443,6 +452,19 @@ public class Board {
 			}
 		}
 		
+		
+	}
+	
+	
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		for(BoardCell b : cells) {
+			b.drawCell(g);
+		}
+		Iterator<Entry<String, Player>> iter = players.entrySet().iterator();
+		while(iter.hasNext()) {
+			iter.next().getValue().draw(g);
+		}
 		
 	}
 	

@@ -1,14 +1,25 @@
 package clueGame;
 
+import java.awt.Color;
+import java.awt.Graphics;
+
 public class WalkwayCell extends BoardCell{
 
 	public WalkwayCell() {
-		// TODO Auto-generated constructor stub
+		super();
 	}
 	
 	@Override
 	public boolean isWalkway() {
 		return true;
 	}
+	
+	@Override
+	public void drawCell(Graphics g) {
+		g.setColor(Color.YELLOW);
+		g.fillRect(row*SIDE_LENGTH,  column*SIDE_LENGTH, SIDE_LENGTH, SIDE_LENGTH);
+		g.setColor(Color.BLACK);
+		g.drawRect(row*SIDE_LENGTH,  column*SIDE_LENGTH, SIDE_LENGTH, SIDE_LENGTH);
 
+	}
 }

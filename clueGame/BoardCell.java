@@ -20,7 +20,7 @@ public abstract class BoardCell {
 		return false;
 	}
 	
-	public void drawCell(Graphics g) {
+	public void drawCell(Graphics g, Board b) {
 		
 	}
 	

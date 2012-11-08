@@ -124,8 +124,10 @@ public class Board extends JPanel {
 					if ((element[i].trim().length() <= 2) && (rooms.containsKey(element[i].trim().charAt(0)))){
 						if (element[i].trim().equalsIgnoreCase("W"))
 							cells.add(new WalkwayCell());
-						else 
+						else {
 							cells.add(new RoomCell(element[i].trim()));
+							
+						} 
 					} else
 						throw new BadConfigFormatException("Invalid room initial in layout file.");
 				}
@@ -459,7 +461,7 @@ public class Board extends JPanel {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		for(BoardCell b : cells) {
-			b.drawCell(g);
+			b.drawCell(g, this);
 		}
 		Iterator<Entry<String, Player>> iter = players.entrySet().iterator();
 		while(iter.hasNext()) {

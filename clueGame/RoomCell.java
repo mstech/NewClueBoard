@@ -7,6 +7,7 @@ public class RoomCell extends BoardCell {
 	public enum DoorDirection {UP, DOWN, LEFT, RIGHT, NONE};
 	private DoorDirection doorDirection;
 	private char roomInitial;
+	private boolean nameSquare;
 	
 	public RoomCell(String room) {
 		roomInitial = room.charAt(0);
@@ -24,9 +25,14 @@ public class RoomCell extends BoardCell {
 			case 'D': 
 				doorDirection = DoorDirection.DOWN;
 				break;
+			case 'N': 
+				doorDirection = DoorDirection.NONE;
+				nameSquare = true;
 			}
-		else 
+		else  {
 			doorDirection = DoorDirection.NONE;
+			nameSquare = false;
+		}
 	}
 	
 	@Override
@@ -48,9 +54,8 @@ public class RoomCell extends BoardCell {
 	public DoorDirection getDoorDirection() {
 		return doorDirection;
 	}
-	
 	@Override
-	public void drawCell(Graphics g) {
+	public void drawCell(Graphics g, Board b) {
 		g.setColor(Color.GRAY);
 		g.fillRect(row*SIDE_LENGTH,  column*SIDE_LENGTH, SIDE_LENGTH, SIDE_LENGTH);
 		g.setColor(Color.BLUE);
@@ -67,6 +72,9 @@ public class RoomCell extends BoardCell {
 			else if(doorDirection == DoorDirection.RIGHT) {
 				g.fillRect(row*SIDE_LENGTH + SIDE_LENGTH - 4, column*SIDE_LENGTH, 4, SIDE_LENGTH);
 			}
+		}
+		if(nameSquare) {
+			g.drawString(b.getRooms().get(this.roomInitial),row*SIDE_LENGTH , column*SIDE_LENGTH);
 		}
 		
 

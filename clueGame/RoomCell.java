@@ -74,7 +74,7 @@ public class RoomCell extends BoardCell {
 			}
 		}
 		if(nameSquare) {
-			g.drawString(b.getRooms().get(this.roomInitial),row*SIDE_LENGTH , column*SIDE_LENGTH);
+			g.drawString(b.getRooms().get(this.roomInitial),row*SIDE_LENGTH  , column*SIDE_LENGTH - 4);
 		}
 		
 

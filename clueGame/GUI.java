@@ -51,15 +51,16 @@ public class GUI extends JFrame {
 		return exit;
 	}
 
-	private DetectiveNotesDialog dialog;
+	private DetectiveNotesDialog dialog = null;
 	
 	private JMenuItem createDetectiveNotesWindow() {
 		
 		JMenuItem detectiveNotes = new JMenuItem("Detective Notes");
 		class MenuItemListener implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
-				
-				dialog = new DetectiveNotesDialog();
+				if(dialog == null) {
+					dialog = new DetectiveNotesDialog();
+				}
 				dialog.setVisible(true);
 
 			}

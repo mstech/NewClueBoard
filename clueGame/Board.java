@@ -543,4 +543,19 @@ public class Board extends JPanel {
 	public void setSeen(ArrayList<Card> seen) {
 		this.seen = seen;
 	}
+	
+	public Player getHumanPlayer() {
+		Iterator<Entry<String, Player>> iter = players.entrySet().iterator();
+		while(iter.hasNext()) {
+			Player p = iter.next().getValue();
+			if(p.isHuman()) {
+				return p;
+			}
+		}
+		return null;
+	}
+	
+	public Player getCurrentPlayer() {
+		return currentPlayer;
+	}
 }

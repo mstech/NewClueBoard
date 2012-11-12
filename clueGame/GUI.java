@@ -19,10 +19,16 @@ import javax.swing.border.TitledBorder;
 public class GUI extends JFrame {
 
 	public GUI() {
-
-		setSize(800, 800);
+		
+		Board playingBoard = new Board();
+		CardsPanel cardsPanel = new CardsPanel(playingBoard);
+		ControlPanel controlPanel = new ControlPanel(playingBoard);
+		setSize(700, 700);
 		setTitle("Clue Game");
-		add(new Board(), BorderLayout.CENTER);
+		add(playingBoard, BorderLayout.CENTER);
+		add(cardsPanel, BorderLayout.EAST);
+		add(controlPanel, BorderLayout.SOUTH);
+		
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.add(createFileMenu());
 		setJMenuBar(menuBar);

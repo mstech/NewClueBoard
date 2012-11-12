@@ -5,5 +5,10 @@ public class HumanPlayer extends Player {
 	public HumanPlayer(String name, int startX, int startY) {
 		super(name, startX, startY);
 	}
+	
+	@Override
+	public boolean isHuman() {
+		return true;
+	}
 
 }

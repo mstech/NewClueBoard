@@ -88,6 +88,10 @@ public class Player {
 		return (this.name == other.getName());
 	}
 	
+	public boolean isHuman() {
+		return false;
+	}
+	
 	public void draw(Graphics g) {
 		if(name.equals("Miss Scarlett")) {
 				g.setColor(Color.RED);

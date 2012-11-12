@@ -31,5 +31,10 @@ public class ComputerPlayer extends Player {
 		
 	}
 	
+	@Override
+	public boolean isHuman() {
+		return false;
+	}
+	
 
 }

@@ -5,6 +5,7 @@ import java.awt.Graphics;
 public abstract class BoardCell {
 	protected int row;
 	protected int column;
+	protected java.awt.Color color;
 	
 	public static final int SIDE_LENGTH = 25;
 
@@ -24,6 +25,14 @@ public abstract class BoardCell {
 		
 	}
 	
+	public int getRow() {
+		return row;
+	}
+
+	public int getColumn() {
+		return column;
+	}
+
 	public void setRow(int row) {
 		this.row = row;
 	}
@@ -32,4 +41,9 @@ public abstract class BoardCell {
 		this.column = column;
 	}
 
+	public void setColor(java.awt.Color color) {
+		this.color = color;
+	}
+	
+	
 }

@@ -33,6 +33,7 @@ public class RoomCell extends BoardCell {
 			doorDirection = DoorDirection.NONE;
 			nameSquare = false;
 		}
+		color = Color.GRAY;
 	}
 	
 	@Override
@@ -56,7 +57,7 @@ public class RoomCell extends BoardCell {
 	}
 	@Override
 	public void drawCell(Graphics g, Board b) {
-		g.setColor(Color.GRAY);
+		g.setColor(color);
 		g.fillRect(row*SIDE_LENGTH,  column*SIDE_LENGTH, SIDE_LENGTH, SIDE_LENGTH);
 		g.setColor(Color.BLUE);
 		if(isDoorway()) {

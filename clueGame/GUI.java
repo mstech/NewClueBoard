@@ -12,6 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
@@ -21,6 +22,10 @@ public class GUI extends JFrame {
 	public GUI() {
 		
 		Board playingBoard = new Board();
+		
+		System.out.println(playingBoard.getGoal()[0].getName());
+		System.out.println(playingBoard.getGoal()[1].getName());
+		System.out.println(playingBoard.getGoal()[2].getName());
 		CardsPanel cardsPanel = new CardsPanel(playingBoard);
 		ControlPanel controlPanel = new ControlPanel(playingBoard);
 		setSize(700, 700);
@@ -32,6 +37,7 @@ public class GUI extends JFrame {
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.add(createFileMenu());
 		setJMenuBar(menuBar);
+		
 		
 		
 
@@ -245,6 +251,9 @@ private class DetectiveWeaponChecksPanel extends JPanel{
 		GUI clueBoard = new GUI();
 		clueBoard.setVisible(true);
 		clueBoard.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		JOptionPane.showMessageDialog(new JFrame(),"You are Professor Plum, press Next Player to begin", "Welcome to Clue", JOptionPane.INFORMATION_MESSAGE);
+		
+
 	}
 
 }

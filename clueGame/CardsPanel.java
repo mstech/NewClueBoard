@@ -35,6 +35,7 @@ public class CardsPanel extends JPanel {
 		public CardPanel(String name) {
 			JTextField cardName = new JTextField(name);
 			add(cardName);
+			cardName.setEditable(false);
 			
 		}
 		

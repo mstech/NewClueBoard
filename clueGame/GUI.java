@@ -28,7 +28,8 @@ public class GUI extends JFrame {
 		System.out.println(playingBoard.getGoal()[2].getName());
 		CardsPanel cardsPanel = new CardsPanel(playingBoard);
 		ControlPanel controlPanel = new ControlPanel(playingBoard);
-		setSize(700, 700);
+		playingBoard.addControlPanel(controlPanel);
+		setSize(950, 700);
 		setTitle("Clue Game");
 		add(playingBoard, BorderLayout.CENTER);
 		add(cardsPanel, BorderLayout.EAST);
@@ -165,11 +166,11 @@ private class DetectiveWeaponChecksPanel extends JPanel{
 
 	DetectiveWeaponChecksPanel(){
 		candlestick = new JCheckBox("CandleStick");
-		knife = new JCheckBox("Knife");
+		knife = new JCheckBox("Dagger");
 		leadpipe = new JCheckBox("Lead Pipe");
 		revolver = new JCheckBox("Revolver");
 		rope = new JCheckBox("Rope");
-		wrench = new JCheckBox("Wrench");
+		wrench = new JCheckBox("Spanner");
 
 		add(candlestick);
 		add(knife);

@@ -1,5 +1,0 @@
-1) extract file names for the configuration files into constants. So instead of passing the file names to the load config function we created two constants which contain the config file names.
-2) Added comments to explain the adjToWalkwayFunction.
-3) Deleted the main function. Was not being used.
-4) Changed most of the utility functions such as loading configs and calculating adj to private methods. 
-5) Changed the visited array to be a linked list. We did this since the array contained a lot of unused space.

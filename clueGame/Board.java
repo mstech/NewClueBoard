@@ -2,6 +2,9 @@ package clueGame;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.FileNotFoundException;
@@ -19,9 +22,14 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeMap;
 
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 public class Board extends JPanel {
 	public static final String LEGEND_FILENAME = "legend.txt";
@@ -45,6 +53,8 @@ public class Board extends JPanel {
 	private int numRows;
 	private int numColumns;
 	private int diceRoll;
+	private boolean isGameBegin;
+	private ControlPanel cp;
 
 	private Player currentPlayer;
 	private Card matchedCard;
@@ -64,14 +74,27 @@ public class Board extends JPanel {
 		weapon = new HashMap<String, Card>();
 		seen = new ArrayList<Card>();
 		goal = new Card[MAX_CARD_HAND];
+		isGameBegin = true;
 
 		addMouseListener(new BoardMouseListener());
 		loadConfigFiles();
 		calcAdjacencies();
 		deal();
-		
+
 
 		//lol
+	}
+
+	public void addControlPanel(ControlPanel cp){
+		this.cp = cp;
+	}
+
+	public boolean isGameBegin() {
+		return isGameBegin;
+	}
+
+	public void setGameBegin(boolean isGameBegin) {
+		this.isGameBegin = isGameBegin;
 	}
 
 	private void loadConfigFiles(){
@@ -486,11 +509,21 @@ public class Board extends JPanel {
 	}
 
 	public void nextPlayer() {
-		
+
+		for(BoardCell b : targets) {
+			if(b.isWalkway()){
+				b.setColor(Color.YELLOW);
+				repaint();
+			}
+			else{
+				b.setColor(Color.GRAY);
+			}
+		}
+
 		if(currentPlayer == null){
 			currentPlayer = getHumanPlayer();
 		}
-		
+
 		Iterator<Entry<String, Player>> iter = players.entrySet().iterator();
 		while(iter.hasNext()) {
 			if(iter.next().getValue().equals(currentPlayer)) {
@@ -500,6 +533,12 @@ public class Board extends JPanel {
 					return;
 				}
 				currentPlayer = iter.next().getValue();
+
+				if(currentPlayer.isHuman()){
+					HumanPlayer hp = (HumanPlayer) currentPlayer;
+					hp.setEndTurn(false);
+				}
+
 				return;
 			}
 
@@ -674,41 +713,62 @@ public class Board extends JPanel {
 
 	public class BoardMouseListener implements MouseListener {
 		public void mouseClicked (MouseEvent event) {
-			
-			boolean valid  = false;
-			for(BoardCell c : targets) {
-				if(event.getX() > c.getRow()*BoardCell.SIDE_LENGTH && event.getX() <= c.getRow() * BoardCell.SIDE_LENGTH + BoardCell.SIDE_LENGTH ){
-					if(event.getY() > c.getColumn()*BoardCell.SIDE_LENGTH && event.getY() <= c.getColumn() * BoardCell.SIDE_LENGTH + BoardCell.SIDE_LENGTH ){
+			if( currentPlayer != null && currentPlayer.isHuman()){
+				HumanPlayer hp = (HumanPlayer) currentPlayer;
+				if(!(hp.isEndTurn())){
+					boolean valid  = false;
+					for(BoardCell c : targets) {
+						if(event.getX() > c.getRow()*BoardCell.SIDE_LENGTH && event.getX() <= c.getRow() * BoardCell.SIDE_LENGTH + BoardCell.SIDE_LENGTH ){
+							if(event.getY() > c.getColumn()*BoardCell.SIDE_LENGTH && event.getY() <= c.getColumn() * BoardCell.SIDE_LENGTH + BoardCell.SIDE_LENGTH ){
 
-						currentPlayer.setStartX(c.getRow());
-						currentPlayer.setStartY(c.getColumn());
-						if(c.isDoorway()){
-							//make suggestion
+								currentPlayer.setStartX(c.getRow());
+								currentPlayer.setStartY(c.getColumn());
+								if(c.isDoorway()){
+
+									HumanMakeSuggestion suggestion = new HumanMakeSuggestion((RoomCell)c);
+									suggestion.setSize(200, 200);
+									suggestion.setVisible(true);
+
+								}
+								valid = true;
+
+								hp = (HumanPlayer) currentPlayer;
+								hp.setEndTurn(true);
+
+							}	
+
 						}
-						valid = true;
-						
-						HumanPlayer hp = (HumanPlayer) currentPlayer;
-						hp.setEndTurn(true);
 
-					}	
+					}
+					if(! valid){
+						JOptionPane.showMessageDialog(new JFrame(), "Invalid Location", "Error", JOptionPane.ERROR_MESSAGE);
+					}
+					if(valid){
+						for(BoardCell b : targets) {
+							if(b.isWalkway()){
+								b.setColor(Color.YELLOW);
+								repaint();
+							}
+							else{
+								b.setColor(Color.GRAY);
+							}
+						}
+					}
+				} else{
+
+					JOptionPane.showMessageDialog(new JFrame(), "Its not your turn!", "Error", JOptionPane.ERROR_MESSAGE);
+					for(BoardCell b : targets) {
+						if(b.isWalkway()){
+							b.setColor(Color.YELLOW);
+							repaint();
+						}
+						else{
+							b.setColor(Color.GRAY);
+						}
+					}
 
 				}
 			}
-			if(! valid){
-				JOptionPane.showMessageDialog(new JFrame(), "Invalid Location", "Error", JOptionPane.ERROR_MESSAGE);
-			}
-			if(valid){
-				for(BoardCell b : targets) {
-					if(b.isWalkway()){
-						b.setColor(Color.YELLOW);
-						repaint();
-					}
-					else{
-						b.setColor(Color.GRAY);
-					}
-				}
-			}
-			
 		}
 		public void mousePressed(MouseEvent event) {
 		}
@@ -722,6 +782,128 @@ public class Board extends JPanel {
 
 		}
 
+	}
+
+	public class HumanMakeSuggestion extends JDialog {
+
+		private RoomPanel roomPanel;
+		private WeaponPanel weaponPanel;
+		private SuspectPanel suspectPanel;
+		private RoomCell rc;
+
+		public HumanMakeSuggestion( RoomCell c) {
+			this.rc = c;
+			roomPanel = new RoomPanel(this.rc);
+			weaponPanel = new WeaponPanel();
+			suspectPanel = new SuspectPanel();
+			add(roomPanel);
+			add(weaponPanel);
+			add(suspectPanel);
+			JButton suggestionButton = new JButton("Make Suggestion");
+			add(suggestionButton);
+			suggestionButton.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					Card roomCard = room.get(rooms.get(rc.getInitial()));
+					Card weaponCard = weapon.get(weaponPanel.getWeaponChoice().getSelectedItem());
+					Card suspectCard = suspect.get(suspectPanel.getSuspectChoice().getSelectedItem());
+					Card proof = handleSuggestion(suspectCard, roomCard, weaponCard);
+					if(proof != null) {
+						seen.add(proof);
+					}
+					players.get(suspectCard.getName()).setStartY(rc.getColumn());
+					players.get(suspectCard.getName()).setStartX(rc.getRow());
+					repaint();
+
+					cp.getSuggestion().setTextBox(suspectCard.getName() + " " + roomCard.getName() + " " + weaponCard.getName());
+					if(proof != null){
+						cp.getResponse().setTextBox(proof.getName());
+					}
+					else{
+						cp.getResponse().setTextBox("No proof");
+					}
+
+
+
+
+					setVisible(false);
+
+				}
+
+			});
+			setLayout(new GridLayout(4, 1));
+		}
+
+	}
+
+	public class RoomPanel extends JPanel {
+
+		private RoomCell c;
+
+		public RoomPanel(RoomCell c) {
+			this.c = c;
+			JLabel roomLabel = new JLabel("Room");
+			JTextField room = new JTextField(rooms.get(c.getInitial()));
+			room.setEditable(false);
+			add(roomLabel);
+			add(room);
+
+		}
+	}
+
+	public class WeaponPanel extends JPanel {
+		private JComboBox<String> weaponChoice;
+
+		public WeaponPanel() {
+			JLabel weaponLabel = new JLabel("Weapon");
+			weaponChoice = new JComboBox<String>();
+			Iterator<Entry<String, Card>> iter = weapon.entrySet().iterator();
+			while(iter.hasNext()) {
+				String temp = iter.next().getValue().getName();
+				weaponChoice.addItem(temp);
+			}
+			add(weaponLabel);
+			add(weaponChoice);
+		}
+
+		public JComboBox<String> getWeaponChoice() {
+			return weaponChoice;
+		}
+
+	}
+
+	public class SuspectPanel extends JPanel {
+
+		private JComboBox<String> suspectChoice;
+
+		public SuspectPanel() {
+			JLabel suspectLabel = new JLabel("Suspect");
+			suspectChoice = new JComboBox<String>();
+			Iterator<Entry<String, Card>> iter = suspect.entrySet().iterator();
+			while(iter.hasNext()) {
+				String temp = iter.next().getValue().getName();
+				suspectChoice.addItem(temp);
+			}
+			add(suspectLabel);
+			add(suspectChoice);
+		}
+
+		public JComboBox<String> getSuspectChoice() {
+			return suspectChoice;
+		}
+	}
+
+	public Map<String, Card> getRoom() {
+		return room;
+	}
+
+	public Map<String, Card> getWeapon() {
+		return weapon;
+	}
+
+	public Map<String, Card> getSuspect() {
+		return suspect;
 	}
 
 }
